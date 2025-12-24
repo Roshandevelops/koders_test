@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../data/datasources/local/auth_local_datasource.dart';
 import '../../data/datasources/remote/post_remote_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
@@ -13,7 +14,6 @@ import '../../domain/usecases/posts/get_post_by_id_usecase.dart';
 import '../../domain/usecases/posts/get_posts_usecase.dart';
 
 class DependencyInjection {
-  // Data Sources
   static PostRemoteDataSource providePostRemoteDataSource() {
     return PostRemoteDataSourceImpl(http.Client());
   }
@@ -23,7 +23,6 @@ class DependencyInjection {
     return AuthLocalDataSourceImpl(sharedPreferences);
   }
 
-  // Repositories
   static PostRepository providePostRepository() {
     return PostRepositoryImpl(providePostRemoteDataSource());
   }
@@ -33,7 +32,6 @@ class DependencyInjection {
     return AuthRepositoryImpl(localDataSource);
   }
 
-  // Use Cases
   static Future<LoginUseCase> provideLoginUseCase() async {
     final repository = await provideAuthRepository();
     return LoginUseCase(repository);
@@ -59,4 +57,3 @@ class DependencyInjection {
     return GetPostByIdUseCase(repository);
   }
 }
-

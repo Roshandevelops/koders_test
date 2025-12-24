@@ -10,24 +10,16 @@ class PostRepositoryImpl implements PostRepository {
   PostRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Result<List<Post>>> getPosts({
-    int page = 1,
-    int limit = 10,
-  }) async {
+  Future<Result<List<Post>>> getPosts({int page = 1, int limit = 20}) async {
     try {
-      final posts = await remoteDataSource.getPosts(
-        page: page,
-        limit: limit,
-      );
+      final posts = await remoteDataSource.getPosts(page: page, limit: limit);
       return Success(posts);
     } on ServerFailure catch (e) {
       return Error(e);
     } on NetworkFailure catch (e) {
       return Error(e);
     } catch (e) {
-      return Error(
-        ServerFailure('Failed to get posts: ${e.toString()}'),
-      );
+      return Error(ServerFailure('Failed to get posts: ${e.toString()}'));
     }
   }
 
@@ -41,10 +33,7 @@ class PostRepositoryImpl implements PostRepository {
     } on NetworkFailure catch (e) {
       return Error(e);
     } catch (e) {
-      return Error(
-        ServerFailure('Failed to get post: ${e.toString()}'),
-      );
+      return Error(ServerFailure('Failed to get post: ${e.toString()}'));
     }
   }
 }
-

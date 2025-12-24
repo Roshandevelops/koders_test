@@ -25,10 +25,15 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _loadPost();
+    // Use addPostFrameCallback to ensure context is available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadPost();
+    });
   }
 
   Future<void> _loadPost() async {
+    if (!mounted) return;
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -36,6 +41,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
     final postProvider = context.read<PostProvider>();
     final post = await postProvider.getPostById(widget.postId);
+
+    if (!mounted) return;
 
     setState(() {
       _isLoading = false;

@@ -1,244 +1,121 @@
-# Koders Test - Flutter Mobile App
+# Koders Test - Flutter App
 
-A production-ready Flutter mobile application built with Clean Architecture, following best practices and industry standards.
+A Flutter mobile app built with Clean Architecture. Works on Android right now, and the code is ready for iOS builds too.
 
-## 📱 Features
+## What's Inside
 
-- **Mock Authentication**: Email/password login with validation and session management
-- **REST API Integration**: Consumes JSONPlaceholder API for posts data
-- **List Screen**: Posts list with pull-to-refresh and pagination
-- **Detail Screen**: Post details with navigation and data passing
-- **State Management**: Loading, empty, and error states properly handled
-- **Clean UI**: Responsive design with reusable widgets
-- **Platform Support**: Android (ready now) and iOS (ready for macOS build)
+This app has a simple login system (mock auth for demo), fetches posts from a public API, and shows them in a list with pagination. You can tap on any post to see the details.
 
-## 🏗️ Architecture
+## Features
 
-This project follows **Clean Architecture** principles with clear separation of concerns:
+- Login screen with email/password validation
+- Session management (remembers you're logged in)
+- Posts list that loads 20 items at a time when you scroll
+- Pull to refresh the list
+- Post detail screen
+- Loading states, error handling, and empty states
+- Dark mode support (follows your system settings)
 
+## Tech Stack
+
+I used Clean Architecture here, so the code is split into three main layers:
+
+- **Domain layer**: Business logic, entities, use cases, and repository interfaces. This part doesn't know anything about Flutter or HTTP - it's just pure Dart code.
+
+- **Data layer**: Handles API calls using the `http` package, stores stuff locally with `shared_preferences`, and implements the repository interfaces from the domain layer.
+
+- **Presentation layer**: The UI stuff - screens, widgets, and state management using `provider`.
+
+There's also a `core` folder with shared utilities like constants, themes, validators, and dependency injection setup.
+
+## Dependencies
+
+Main packages:
+- `provider` - for state management
+- `http` - for API calls
+- `shared_preferences` - to store login session
+
+That's pretty much it. I kept it simple and didn't use any heavy frameworks.
+
+## Getting Started
+
+Make sure you have Flutter installed. Then:
+
+```bash
+flutter pub get
+flutter run
 ```
-lib/
-├── core/                    # Shared utilities and configurations
-│   ├── constants/          # App-wide constants
-│   ├── di/                 # Dependency injection
-│   ├── error/              # Error handling (Failures)
-│   ├── theme/              # App themes
-│   └── utils/              # Utility classes (Validators, Result)
-│
-├── data/                    # Data Layer
-│   ├── datasources/        # Data sources (Remote & Local)
-│   │   ├── local/         # Local storage (SharedPreferences)
-│   │   └── remote/        # API calls (HTTP)
-│   ├── models/             # Data models (extend entities)
-│   └── repositories/       # Repository implementations
-│
-├── domain/                  # Domain Layer (Business Logic)
-│   ├── entities/           # Business entities
-│   ├── repositories/       # Repository interfaces (abstractions)
-│   └── usecases/           # Use cases (business logic)
-│       ├── auth/           # Authentication use cases
-│       └── posts/          # Posts use cases
-│
-└── presentation/            # Presentation Layer (UI)
-    ├── providers/          # State management (Provider)
-    ├── screens/            # UI screens
-    └── widgets/            # Reusable UI components
-```
 
-### Architecture Principles
+That's it. The app should run on Android right away.
 
-1. **Dependency Rule**: Dependencies point inward
-   - Presentation → Domain ← Data
-   - UI never calls APIs directly
-   - Providers use use cases
-   - Repositories are abstracted
+For iOS, you'll need a Mac with Xcode, but the code itself is ready - no platform-specific hacks or anything.
 
-2. **Separation of Concerns**:
-   - **Domain**: Pure business logic, no dependencies on Flutter or external libraries
-   - **Data**: Handles data sources (API, local storage), implements domain interfaces
-   - **Presentation**: UI layer, depends on domain layer only
+## Login Credentials
 
-3. **Dependency Injection**: Centralized in `core/di/dependency_injection.dart`
+Since this is a demo app, I set up mock authentication:
+- Email: `user@example.com`
+- Password: `password123`
 
-## 🚀 Setup Instructions
+Just use these to log in and test the app.
 
-### Prerequisites
+## How It Works
 
-- Flutter SDK (latest stable version)
-- Dart SDK (comes with Flutter)
-- Android Studio / VS Code with Flutter extensions
-- For iOS: macOS with Xcode (for later iOS builds)
+The app fetches posts from JSONPlaceholder API (it's a public test API). When you first open the app, it loads 20 posts. Scroll down and when you get near the bottom, it automatically loads the next 20. You'll see a loading indicator while it fetches more.
 
-### Installation Steps
+You can pull down to refresh the list, and tap on any post to see the full details.
 
-1. **Clone the repository** (if applicable) or navigate to the project directory
+The authentication is mocked - it just checks if the email and password match the demo credentials. If they do, it saves a token locally and keeps you logged in until you log out.
 
-2. **Install dependencies**:
-   ```bash
-   flutter pub get
-   ```
+## Project Structure
 
-3. **Run the app**:
-   ```bash
-   flutter run
-   ```
+The code is organized like this:
 
-### Demo Credentials
+- `lib/core/` - Shared stuff (constants, themes, validators, error handling, dependency injection)
+- `lib/domain/` - Business logic (entities, use cases, repository interfaces)
+- `lib/data/` - Data handling (API calls, local storage, repository implementations)
+- `lib/presentation/` - UI (screens, widgets, providers for state management)
 
-For testing the authentication feature:
-- **Email**: `user@example.com`
-- **Password**: `password123`
+The key thing is that the UI never directly calls APIs. Everything goes through use cases, which call repositories, which handle the actual data fetching. This makes the code easier to test and maintain.
 
-## 📦 Dependencies
+## State Management
 
-### Production Dependencies
-- `flutter`: Flutter SDK
-- `provider: ^6.1.1`: State management
-- `http: ^1.2.0`: HTTP client for API calls
-- `shared_preferences: ^2.2.2`: Local storage for session management
-- `cupertino_icons: ^1.0.8`: iOS-style icons
+I'm using Provider for state management. There are two main providers:
+- `AuthProvider` - handles login/logout and session state
+- `PostProvider` - manages the posts list and pagination
 
-### Development Dependencies
-- `flutter_test`: Flutter testing framework
-- `flutter_lints: ^5.0.0`: Linting rules
+## API Details
 
-## 🎨 UI/UX Features
+The app uses JSONPlaceholder API:
+- Base URL: `https://jsonplaceholder.typicode.com`
+- Endpoint: `/posts`
 
-- **Material Design 3**: Modern, responsive UI
-- **Dark Mode Support**: Automatic theme switching based on system preferences
-- **Loading States**: Proper loading indicators during data fetching
-- **Error Handling**: User-friendly error messages with retry options
-- **Empty States**: Informative empty state widgets
-- **Pull-to-Refresh**: Refresh posts list by pulling down
-- **Pagination**: Automatic loading of more posts when scrolling
-- **Navigation**: Smooth navigation between screens with proper data passing
+Since this API doesn't support server-side pagination, I implemented client-side pagination. It fetches all posts once and then slices them into pages of 20 items each.
 
-## 🔐 Authentication Flow
+## Running Tests
 
-1. **Login Screen**: User enters email and password
-2. **Validation**: Client-side validation using `Validators` utility
-3. **Mock Authentication**: Validates against mock credentials
-4. **Session Management**: Stores auth token and user email in SharedPreferences
-5. **Auto-login**: Checks authentication status on app startup
-6. **Logout**: Clears session data and returns to login screen
-
-## 📡 API Integration
-
-The app consumes the **JSONPlaceholder** API:
-- **Base URL**: `https://jsonplaceholder.typicode.com`
-- **Endpoint**: `/posts`
-- **Method**: GET
-
-### API Features
-- Proper error handling (network errors, server errors)
-- Timeout handling (30 seconds)
-- JSON parsing with proper model classes
-- Client-side pagination
-
-## 🧩 Key Components
-
-### Use Cases
-- `LoginUseCase`: Handles user authentication with validation
-- `LogoutUseCase`: Handles user logout
-- `GetCurrentUserUseCase`: Retrieves current logged-in user
-- `GetPostsUseCase`: Fetches posts with pagination
-- `GetPostByIdUseCase`: Fetches a single post by ID
-
-### Providers
-- `AuthProvider`: Manages authentication state
-- `PostProvider`: Manages posts state with pagination
-
-### Reusable Widgets
-- `LoadingWidget`: Loading indicator with optional message
-- `ErrorDisplayWidget`: Error display with retry button
-- `EmptyWidget`: Empty state display
-- `PostCard`: Reusable post card widget
-
-## 🧪 Testing
-
-To run tests:
 ```bash
 flutter test
 ```
 
-## 📱 Platform Support
+## Platform Support
 
-### Android
-- ✅ Fully supported and tested
-- Minimum SDK: As per Flutter defaults
-- Ready to build and run
+- **Android**: Fully working, just run `flutter run`
+- **iOS**: Code is ready, but you need macOS to build it. No code changes needed.
 
-### iOS
-- ✅ Code is iOS-safe (no platform-specific hacks)
-- ⚠️ Requires macOS for building
-- All code is ready; just needs to be built on macOS
+## Notes
 
-## 🏃 Running the App
+- The authentication is mocked for demo purposes
+- All posts data comes from JSONPlaceholder (public test API)
+- Session is stored locally using SharedPreferences
+- The app follows Clean Architecture principles, so business logic is separated from UI and data sources
+- Error handling is done through custom Failure classes
+- Loading and empty states are handled properly throughout the app
 
-### Android
-```bash
-flutter run
-```
+## Troubleshooting
 
-### iOS (on macOS)
-```bash
-flutter run -d ios
-```
 
-## 📝 Code Quality
+For build errors, make sure your Flutter SDK is up to date.
 
-- **Linting**: Follows Flutter/Dart linting rules
-- **Architecture**: Clean Architecture with proper separation
-- **Error Handling**: Comprehensive error handling with custom Failure classes
-- **Type Safety**: Strong typing throughout the codebase
-- **Null Safety**: Full null safety support
+iOS builds require macOS with Xcode - can't do much about that on Windows.
 
-## 🔄 State Management
-
-The app uses **Provider** for state management:
-- `ChangeNotifier` for state classes
-- `Consumer` widgets for reactive UI updates
-- Proper state lifecycle management
-
-## 🎯 Best Practices Implemented
-
-1. ✅ UI never calls APIs directly
-2. ✅ Providers use use cases
-3. ✅ Repositories are abstracted
-4. ✅ Centralized themes, constants, and styles
-5. ✅ iOS-safe code (no platform-specific hacks)
-6. ✅ Proper error handling
-7. ✅ Loading and empty states
-8. ✅ Reusable widgets
-9. ✅ Clean code structure
-10. ✅ Dependency injection
-
-## 📄 License
-
-This project is created for demonstration purposes.
-
-## 👨‍💻 Development Notes
-
-- The app uses mock authentication for demonstration
-- API calls are made to JSONPlaceholder (public test API)
-- Session is persisted using SharedPreferences
-- All business logic is in the domain layer
-- UI is completely separated from data sources
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **Dependencies not found**: Run `flutter pub get`
-2. **Build errors**: Ensure Flutter SDK is up to date
-3. **iOS build issues**: Requires macOS with Xcode installed
-
-## 📚 Additional Resources
-
-- [Flutter Documentation](https://flutter.dev/docs)
-- [Provider Package](https://pub.dev/packages/provider)
-- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-
----
-
-**Built with ❤️ using Flutter**
+That's about it. The code is pretty straightforward and follows standard Flutter practices.

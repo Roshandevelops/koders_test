@@ -11,7 +11,6 @@ import 'presentation/screens/login_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize dependencies
   final loginUseCase = await DependencyInjection.provideLoginUseCase();
   final logoutUseCase = await DependencyInjection.provideLogoutUseCase();
   final getCurrentUserUseCase =

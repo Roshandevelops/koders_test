@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../domain/entities/post.dart';
 import '../providers/post_provider.dart';
-import '../widgets/loading_widget.dart';
-import '../widgets/error_widget.dart';
 import '../widgets/empty_widget.dart';
+import '../widgets/error_widget.dart';
+import '../widgets/loading_widget.dart';
 import '../widgets/post_card.dart';
 import 'post_detail_screen.dart';
-import '../../domain/entities/post.dart';
 
 class PostsListScreen extends StatefulWidget {
   const PostsListScreen({super.key});
@@ -35,6 +36,9 @@ class _PostsListScreenState extends State<PostsListScreen> {
   }
 
   void _onScroll() {
+    // Check if scroll controller is attached before accessing position
+    if (!_scrollController.hasClients) return;
+
     // Trigger pagination when user scrolls near the bottom (90% of the list)
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
@@ -60,9 +64,7 @@ class _PostsListScreenState extends State<PostsListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Posts'),
-      ),
+      appBar: AppBar(title: const Text('Posts')),
       body: Consumer<PostProvider>(
         builder: (context, postProvider, _) {
           if (postProvider.status == PostStatus.initial ||
@@ -91,8 +93,13 @@ class _PostsListScreenState extends State<PostsListScreen> {
             },
             child: ListView.builder(
               controller: _scrollController,
-              itemCount: postProvider.posts.length +
-                  (postProvider.isLoadingMore || (!postProvider.hasMore && postProvider.posts.isNotEmpty) ? 1 : 0),
+              itemCount:
+                  postProvider.posts.length +
+                  (postProvider.isLoadingMore ||
+                          (!postProvider.hasMore &&
+                              postProvider.posts.isNotEmpty)
+                      ? 1
+                      : 0),
               itemBuilder: (context, index) {
                 // Show loading indicator at the bottom when loading more
                 if (index == postProvider.posts.length) {
@@ -139,4 +146,3 @@ class _PostsListScreenState extends State<PostsListScreen> {
     );
   }
 }
-

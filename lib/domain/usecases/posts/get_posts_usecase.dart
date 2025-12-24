@@ -7,11 +7,7 @@ class GetPostsUseCase {
 
   GetPostsUseCase(this.repository);
 
-  Future<Result<List<Post>>> call({
-    int page = 1,
-    int limit = 10,
-  }) async {
+  Future<Result<List<Post>>> call({int page = 1, int limit = 20}) async {
     return await repository.getPosts(page: page, limit: limit);
   }
 }
-

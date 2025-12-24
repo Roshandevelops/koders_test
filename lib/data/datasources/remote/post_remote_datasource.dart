@@ -1,14 +1,13 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import '../../../core/constants/app_constants.dart';
 import '../../../core/error/failures.dart';
 import '../../models/post_model.dart';
 
 abstract class PostRemoteDataSource {
-  Future<List<PostModel>> getPosts({
-    int page = 1,
-    int limit = 10,
-  });
+  Future<List<PostModel>> getPosts({int page = 1, int limit = 20});
   Future<PostModel> getPostById(int id);
 }
 
@@ -18,10 +17,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   PostRemoteDataSourceImpl(this.client);
 
   @override
-  Future<List<PostModel>> getPosts({
-    int page = 1,
-    int limit = 10,
-  }) async {
+  Future<List<PostModel>> getPosts({int page = 1, int limit = 20}) async {
     try {
       final response = await client
           .get(
@@ -32,7 +28,8 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
           );
 
       if (response.statusCode == 200) {
-        final List<dynamic> jsonList = json.decode(response.body) as List<dynamic>;
+        final List<dynamic> jsonList =
+            json.decode(response.body) as List<dynamic>;
         final List<PostModel> posts = jsonList
             .map((json) => PostModel.fromJson(json as Map<String, dynamic>))
             .toList();
@@ -48,9 +45,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
           endIndex > posts.length ? posts.length : endIndex,
         );
       } else {
-        throw ServerFailure(
-          'Failed to load posts: ${response.statusCode}',
-        );
+        throw ServerFailure('Failed to load posts: ${response.statusCode}');
       }
     } catch (e) {
       if (e is ServerFailure) {
@@ -79,9 +74,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       } else if (response.statusCode == 404) {
         throw ServerFailure('Post not found');
       } else {
-        throw ServerFailure(
-          'Failed to load post: ${response.statusCode}',
-        );
+        throw ServerFailure('Failed to load post: ${response.statusCode}');
       }
     } catch (e) {
       if (e is ServerFailure) {
@@ -91,4 +84,3 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     }
   }
 }
-

@@ -13,28 +13,21 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Result<User>> login(String email, String password) async {
     try {
-      // Mock authentication - check against mock credentials
       if (email == AppConstants.mockEmail &&
           password == AppConstants.mockPassword) {
-        // Generate a mock token
         final token = 'mock_token_${DateTime.now().millisecondsSinceEpoch}';
 
-        // Save to local storage
         await localDataSource.saveAuthToken(token);
         await localDataSource.saveUserEmail(email);
 
         return Success(User(email: email, token: token));
       } else {
-        return Error(
-          AuthenticationFailure('Invalid email or password'),
-        );
+        return Error(AuthenticationFailure('Invalid email or password'));
       }
     } on CacheFailure catch (e) {
       return Error(e);
     } catch (e) {
-      return Error(
-        AuthenticationFailure('Login failed: ${e.toString()}'),
-      );
+      return Error(AuthenticationFailure('Login failed: ${e.toString()}'));
     }
   }
 
@@ -46,9 +39,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on CacheFailure catch (e) {
       return Error(e);
     } catch (e) {
-      return Error(
-        AuthenticationFailure('Logout failed: ${e.toString()}'),
-      );
+      return Error(AuthenticationFailure('Logout failed: ${e.toString()}'));
     }
   }
 
@@ -91,4 +82,3 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 }
-
