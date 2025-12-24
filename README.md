@@ -43,11 +43,6 @@ That's pretty much it. I kept it simple and didn't use any heavy frameworks.
 
 This project was built with Flutter 3.35.7 and Dart 3.9.2. 
 
-```bash
-flutter pub get
-flutter run
-```
-
 That's it. The app should run on Android right away.
 
 For iOS, you'll need a Mac with Xcode, but the code itself is ready - no platform-specific hacks or anything.
@@ -92,12 +87,6 @@ The app uses JSONPlaceholder API:
 - Endpoint: `/posts`
 
 Since this API doesn't support server-side pagination, I implemented client-side pagination. It fetches all posts once and then slices them into pages of 20 items each.
-
-## Running Tests
-
-```bash
-flutter test
-```
 
 ## Platform Support
 
