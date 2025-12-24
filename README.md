@@ -2,6 +2,8 @@
 
 A Flutter mobile app built with Clean Architecture. Works on Android right now, and the code is ready for iOS builds too.
 
+**Built with Flutter 3.35.7 (Dart 3.9.2)**
+
 ## What's Inside
 
 This app has a simple login system (mock auth for demo), fetches posts from a public API, and shows them in a list with pagination. You can tap on any post to see the details.
@@ -39,7 +41,7 @@ That's pretty much it. I kept it simple and didn't use any heavy frameworks.
 
 ## Getting Started
 
-Make sure you have Flutter installed. Then:
+This project was built with Flutter 3.35.7 and Dart 3.9.2. 
 
 ```bash
 flutter pub get
